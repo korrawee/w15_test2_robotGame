@@ -5,7 +5,7 @@ void draw(){
 }
 
 
-class World{
+class World{                      ////Create a world of robot
   float blockSize;
   int[][] position = {{   },{  }};
   
@@ -15,7 +15,7 @@ class World{
   }
   
 }
-class Robot{
+class Robot{             /////Create Robot
   float column;
   float row;
   
@@ -26,7 +26,7 @@ class Robot{
   void rotate(){
   }
 }
-class Target{
+class Target{          /////Create a walking goal of the robot.
   float row;
   float column;
   float state;
@@ -34,7 +34,7 @@ class Target{
   void display(){
   }
 }
-class Barrier{
+class Barrier{      /////Create a barrier for the robot
   float row;
   float column;
   
