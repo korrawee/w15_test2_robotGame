@@ -1,4 +1,5 @@
 World world = new World();
+Robot robot = new Robot();
 
 void setup()
 {
@@ -9,6 +10,7 @@ void draw()
 {
   background(#A9A9A9);
   world.draw_map();
+  robot.display();
 }
 
 class World
@@ -55,8 +57,8 @@ class World
 }
 class Robot
 {
-  int row  ;
-  int column ;
+  int row = 0 ;
+  int column = 0 ;
   
   void move()
   {
@@ -64,5 +66,7 @@ class Robot
   
   void display()
   {
+    fill(#FFD700);
+    triangle(25 + row,10 + column,5 + row,40 + column,45 + row,40 + column);
   }
 }  
