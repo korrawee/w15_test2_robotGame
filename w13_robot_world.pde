@@ -10,8 +10,22 @@ void draw()
 {
   background(#A9A9A9);
   world.draw_map();
+  world.draw_target();
   robot.display();
   robot.move(); 
+}
+
+void polygon(float x, float y, float radius, int npoints) 
+{
+  float angle = TWO_PI / npoints;
+  beginShape();
+  for (float a = 0; a < TWO_PI; a += angle) 
+  {
+    float sx = x + cos(a) * radius;
+    float sy = y + sin(a) * radius;
+    vertex(sx, sy);
+  }
+  endShape(CLOSE);
 }
 
 class World
@@ -20,6 +34,7 @@ class World
   int row = 900/blockSize ;
   int column = 900/blockSize ;
   int[][] position = new int[row][column];
+  int state = 1;
   
   World()
   {
@@ -40,6 +55,10 @@ class World
   
   void draw_target()
   {
+    if(state == 1 )
+    {
+      polygon(325,325,20,8);
+    }
   }
   
   void draw_barrier()
