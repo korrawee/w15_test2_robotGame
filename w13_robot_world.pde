@@ -102,7 +102,25 @@ class Robot
   
   void display()
   {
-    fill(#FFD700);
-    triangle(25 + row,10 + column,5 + row,40 + column,45 + row,40 + column);
-  }
+   fill(#FFD700);
+    if(key == CODED)
+    {
+     if(keyCode == UP)
+     {
+      triangle(25 + row,10 + column,5 + row,40 + column,45 + row,40 + column);
+     }
+     if(keyCode == DOWN)
+     {
+      triangle(25 + row,40 + column,5 + row,10 + column,45 + row,10 + column);
+     }
+     if(keyCode == LEFT)
+     {
+      triangle(10 + row,25 + column,40 + row,5 + column,40 + row,45 + column);
+     }
+     if(keyCode == RIGHT)
+     {
+      triangle(40 + row,25 + column,10 + row,5 + column,10 + row,45 + column);
+     }
+    }
+   }
 }  
