@@ -1,43 +1,46 @@
-void setup(){
-  size(300,300);
-}
-void draw(){
-}
-
-
-class World{                      ////Create a world of robot
-  float blockSize;
-  int[][] position = {{   },{  }};
+class World
+{
+  int blockSize =50 ;
+  int row ;
+  int column ;
+  int[][] position ;
   
-  World(){
-  }
-  void draw_map(){
+  World()
+  {
   }
   
-}
-class Robot{             /////Create Robot
-  float column;
-  float row;
+  void draw_map()
+  {
+  }
   
-  void move(){
+  void draw_target()
+  {
   }
-  void display(){
-  }
-  void rotate(){
-  }
-}
-class Target{          /////Create a walking goal of the robot.
-  float row;
-  float column;
-  float state;
   
-  void display(){
+  void draw_barrier()
+  {
   }
-}
-class Barrier{      /////Create a barrier for the robot
-  float row;
-  float column;
   
-  void display(){
-  }
+  //int aRow()
+  //{
+    //return row;
+  //}
+  
+ // int aColumn()
+  //{
+    //return column;
+  //}
 }
+class Robot
+{
+  int row  ;
+  int column ;
+  
+  void move()
+  {
+  }
+  
+  void display()
+  {
+  }
+}  
