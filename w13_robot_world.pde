@@ -13,6 +13,7 @@ void draw()
   world.draw_target();
   robot.display();
   robot.move(); 
+  world.draw_barrier();
 }
 
 void polygon(float x, float y, float radius, int npoints) 
@@ -63,6 +64,15 @@ class World
   
   void draw_barrier()
   {
+    for(int i = 10 ;i < 15 ; i++)
+    {
+      for(int j = 10 ;j <14 ;j++)
+      {
+       fill(#F4A460);
+       rect(i*50,j*50,blockSize,blockSize);
+       position[i][j] = 1;
+      }
+    }
   }
   
   int aRow()
