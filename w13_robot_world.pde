@@ -11,6 +11,7 @@ void draw()
   background(#A9A9A9);
   world.draw_map();
   robot.display();
+  robot.move(); 
 }
 
 class World
@@ -62,6 +63,41 @@ class Robot
   
   void move()
   {
+   if (keyPressed)
+   {
+     if(keyCode == UP)
+     {
+       column -=50; 
+     }
+     if(keyCode == DOWN)
+     {
+      column +=  50; 
+     }
+     if(keyCode == LEFT)
+     {
+       row -= 50; 
+     }
+     if(keyCode == RIGHT)
+     {
+      row +=  50; 
+     }
+     if(row - 25 < 0)
+     {
+       row = 0 ;  
+     }
+     if(row + 25 > width)
+     {
+       row = 850 ;
+     }
+     if(column - 10 < 0)
+     {
+       column = 0;
+     }
+     if (column + 40 > height)
+     {
+      column = 850 ;
+     }
+   }
   }
   
   void display()
