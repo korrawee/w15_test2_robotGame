@@ -172,7 +172,7 @@ class Robot
 {
   int row = 0 ;
   int column = 0 ;
-  String darn = "UP" ;
+  String side = "UP" ;
   
   void move()
   {
@@ -180,22 +180,22 @@ class Robot
    {
      if(keyCode == ip.up())
      {
-       if(darn == "UP")
+       if(side == "UP")
        {
         row -= 50; 
         keyPressed = false ;
        }
-       if(darn == "DOWN")
+       if(side == "DOWN")
        {
         row +=  50; 
         keyPressed = false ; 
        }
-       if(darn == "LEFT")
+       if(side == "LEFT")
        {
         column -= 50; 
         keyPressed = false ;
        }
-       if(darn == "RIGHT")
+       if(side == "RIGHT")
        {
         column +=  50; 
         keyPressed = false ;
@@ -206,22 +206,22 @@ class Robot
   
   void display()
   {
-   if(darn == "UP")
+   if(side == "UP")
    {
      line(0 + column ,50 + row ,25 + column ,0 + row);
      line(50 + column ,50 + row ,25 + column ,0 + row);
    }
-   if(darn == "DOWN")
+   if(side == "DOWN")
    {
     line(0 + column ,0 + row ,25 + column ,50 + row);
     line(50 + column ,0 + row ,25 + column ,50 + row);
    }
-   if(darn == "LEFT")
+   if(side == "LEFT")
    {
     line(50 + column ,0 + row ,0 + column ,25 + row);
     line(50 + column ,50 + row ,0 + column ,25 + row);
    }
-   if(darn == "RIGHT")
+   if(side == "RIGHT")
    {
     line(0 + column ,0 + row ,50 + column ,25 + row);
     line(0 + column ,50 + row ,50 + column ,25 + row);
@@ -233,24 +233,24 @@ class Robot
    {
     if(keyCode == ip.left())
     {
-     if(darn == "UP")
+     if(side == "UP")
      {
-      darn = "LEFT"  ;
+      side = "LEFT"  ;
       keyPressed = false ;
      }
-     else if(darn == "LEFT")
+     else if(side == "LEFT")
      {
-      darn = "DOWN"  ;
+      side = "DOWN"  ;
       keyPressed = false ;
      }
-     else if(darn == "DOWN")
+     else if(side == "DOWN")
      {
-      darn = "RIGHT"  ;
+      side = "RIGHT"  ;
       keyPressed = false ;
      }
-     else if(darn == "RIGHT")
+     else if(side == "RIGHT")
      {
-      darn = "UP"  ;
+      side = "UP"  ;
       keyPressed = false ;
      }
     }
@@ -263,24 +263,24 @@ class Robot
    {
     if(keyCode == ip.right())
     {
-     if(darn == "UP")
+     if(side == "UP")
      {
-      darn = "RIGHT"  ;
+      side = "RIGHT"  ;
       keyPressed = false ;
      }
-     else if(darn == "RIGHT")
+     else if(side == "RIGHT")
      {
-      darn = "DOWN"  ;
+      side = "DOWN"  ;
       keyPressed = false ;
      }
-     else if(darn == "DOWN")
+     else if(side == "DOWN")
      {
-      darn = "LEFT"  ;
+      side = "LEFT"  ;
       keyPressed = false ;
      }
-     else if(darn == "LEFT")
+     else if(side == "LEFT")
      {
-      darn = "UP" ;
+      side = "UP" ;
       keyPressed = false ;
      }
     }
@@ -293,7 +293,7 @@ class Robot
    {
      if(keyCode == ip.up())
      {
-       if(darn == "UP")
+       if(side == "UP")
        {
          if(row <= 0)
          {
@@ -304,7 +304,7 @@ class Robot
            keyPressed = false ;
          }
        }
-       if(darn == "DOWN")
+       if(side == "DOWN")
        {
          if(row + world.blockSize >= height)
          {
@@ -315,7 +315,7 @@ class Robot
            keyPressed = false ;
          }
        }
-       if(darn == "LEFT")
+       if(side == "LEFT")
        {
          if(column <= 0)
          {
@@ -326,7 +326,7 @@ class Robot
            keyPressed = false ;
          }
        }
-       if(darn == "RIGHT")
+       if(side == "RIGHT")
        {
          if(column + world.blockSize >= width)
          {
@@ -347,7 +347,7 @@ class Robot
    {
      if(keyCode == ip.up())
      {
-       if(darn == "UP")
+       if(side == "UP")
        {
          if(match(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize], "2") != null)
          {
@@ -356,7 +356,7 @@ class Robot
            keyPressed = false ;
          }
        }
-       if(darn == "DOWN")
+       if(side == "DOWN")
        {
          if(match(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize], "2") != null)
          {
@@ -365,7 +365,7 @@ class Robot
            keyPressed = false ;
          }
        }
-       if(darn == "LEFT")
+       if(side == "LEFT")
        {
          if(match(world.position[ (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize], "2") != null)
          {
@@ -374,7 +374,7 @@ class Robot
            keyPressed = false ;
          }
        }
-       if(darn == "RIGHT")
+       if(side == "RIGHT")
        {
          if(match(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize], "2") != null)
          {
