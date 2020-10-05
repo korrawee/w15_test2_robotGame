@@ -63,7 +63,9 @@ class World
   }// save method
   
   void load(){
-    try{
+    File f = new File(sketchPath("saved.txt"));
+    
+    if(f.exists()){
       String[] info = loadStrings("saved.txt");
       String[] tmpLine = {};
       
@@ -74,9 +76,9 @@ class World
           position[i][j] = tmpLine[j];  
         }// j loop
       }// i loop
-    }catch (NullPointerException error){
+    }else{
        this.generate();
-    }//catch error
+    }// check file exixts condition
   }// load method
   
   void generate(){
