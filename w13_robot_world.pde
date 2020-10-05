@@ -146,7 +146,7 @@ class World
   }//draw_barrier method
   
   void save(){
-    String[] tmpStr = new String[height/blockSize + 2]; 
+    String[] tmpStr = new String[height/blockSize]; 
     
     for(int i=0; i < height/blockSize; i++){
       tmpStr[i] = "";
@@ -158,8 +158,6 @@ class World
         tmpStr[i] += position[i][j];
       }// j loop
     }// i loop
-    tmpStr[height/blockSize] = str(robot.getRow());
-    tmpStr[height/blockSize + 1] = str(robot.getColumn());
     saveStrings("saved.txt", tmpStr);
   }// save method
 }
