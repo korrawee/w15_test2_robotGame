@@ -4,6 +4,7 @@ void setup()
 {
   size(500, 500);
   strokeWeight(2);
+  world.load();
 }
 
 void draw()
@@ -37,9 +38,41 @@ void mouseClicked(){
 class World
 {
   int blockSize =50 ;
-  String[][] position = new String[500/blockSize][500/blockSize];
   int state = 1;
+  String[][] barrierPosition;
+  String[][] targetPosition;
+  String[][] robotPosition;
+  String[][] position = new String[500/blockSize][500/blockSize];
   Robot robot = new Robot(blockSize);
+  
+  void save(){
+    String[] tmpStr = new String[height/blockSize]; 
+    
+    for(int i=0; i < height/blockSize; i++){
+      tmpStr[i] = "";
+      
+      for(int j=0; j < width/blockSize; j++){
+        if(j != 0){
+          tmpStr[i] += ",";  
+        }//condition
+        tmpStr[i] += position[i][j];
+      }// j loop
+    }// i loop
+    saveStrings("saved.txt", tmpStr);
+  }// save method
+  
+  void load(){
+    String[] info = loadStrings("saved.txt");
+    String[] tmpLine = {};
+    
+    for(int i=0; i < info.length; i++){
+      tmpLine = split(info[i], ",");
+      
+      for(int j=0; j < info.length; j++){
+        position[i][j] = tmpLine[j];  
+      }// j loop
+    }// i loop
+  }// load method
   
   void draw_map()
   {
@@ -145,21 +178,6 @@ class World
     }//i loop
   }//draw_barrier method
   
-  void save(){
-    String[] tmpStr = new String[height/blockSize]; 
-    
-    for(int i=0; i < height/blockSize; i++){
-      tmpStr[i] = "";
-      for(int j=0; j < width/blockSize; j++){
-        
-        if(j != 0){
-          tmpStr[i] += ",";  
-        }//condition
-        tmpStr[i] += position[i][j];
-      }// j loop
-    }// i loop
-    saveStrings("saved.txt", tmpStr);
-  }// save method
 }
 
 class Robot
