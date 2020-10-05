@@ -1,19 +1,27 @@
 World world = new World();
 Robot robot = new Robot();
-
+InputProcessor ip = new InputProcessor();
 void setup()
 {
-  size(900,900);
+  size(500,500);
 }
 
 void draw()
 {
-  background(#A9A9A9);
+  background(255);
   world.draw_map();
   world.draw_target();
-  robot.display();
-  robot.move(); 
   world.draw_barrier();
+  robot.display();
+  robot.isBlocked();
+  robot.isOnTarget();
+  robot.move();
+  robot.turnLeft();
+  robot.turnRight();
+  ip.setUp();
+  ip.setDown();
+  ip.setLeft();
+  ip.setRight();
 }
 
 void polygon(float x, float y, float radius, int npoints) 
@@ -32,9 +40,7 @@ void polygon(float x, float y, float radius, int npoints)
 class World
 {
   int blockSize =50 ;
-  int row = 900/blockSize ;
-  int column = 900/blockSize ;
-  int[][] position = new int[row][column];
+  int[][] position = new int[500/blockSize][500/blockSize];
   int state = 1;
   
   World()
@@ -58,98 +64,321 @@ class World
   {
     if(state == 1 )
     {
-      polygon(325,325,20,8);
+      fill(#FA8072);
+      polygon(475,475,20,8);
+      position[475/world.blockSize][475/world.blockSize] = 2;
     }
+    
   }
   
   void draw_barrier()
   {
-    for(int i = 10 ;i < 15 ; i++)
+    for(int i = 0 ;i < 1 ; i++)
     {
-      for(int j = 10 ;j <14 ;j++)
+      for(int j = 2 ;j < 10 ;j++)
       {
        fill(#F4A460);
-       rect(i*50,j*50,blockSize,blockSize);
+       rect(j*50,i*50,blockSize,blockSize);
+       position[i][j] = 1;
+      }
+    }
+    
+    for(int i = 2 ;i < 10 ; i++)
+    {
+      for(int j = 0 ;j < 1 ;j++)
+      {
+       fill(#F4A460);
+       rect(j*50,i*50,blockSize,blockSize);
+       position[i][j] = 1;
+      }
+    }
+    
+    for(int i = 3 ;i < 5 ; i++)
+    {
+      for(int j = 3 ;j < 10 ;j+=2)
+      {
+       fill(#F4A460);
+       rect(j*50,i*50,blockSize,blockSize);
+       position[i][j] = 1;
+      }
+    }
+    
+    for(int i = 3 ;i < 10 ; i+=2)
+    {
+      for(int j = 3 ;j < 5 ;j++)
+      {
+       fill(#F4A460);
+       rect(j*50,i*50,blockSize,blockSize);
        position[i][j] = 1;
       }
     }
   }
-  
-  int aRow()
-  {
-    return row;
-  }
-  
-  int aColumn()
-  {
-    return column;
-  }
 }
+
 class Robot
 {
   int row = 0 ;
   int column = 0 ;
+  String darn = "UP" ;
   
   void move()
   {
-   if (keyPressed)
+   if (keyPressed == true )
    {
-     if(keyCode == UP)
+     if(keyCode == ip.up())
      {
-       column -=50; 
-     }
-     if(keyCode == DOWN)
-     {
-      column +=  50; 
-     }
-     if(keyCode == LEFT)
-     {
-       row -= 50; 
-     }
-     if(keyCode == RIGHT)
-     {
-      row +=  50; 
-     }
-     if(row - 25 < 0)
-     {
-       row = 0 ;  
-     }
-     if(row + 25 > width)
-     {
-       row = 850 ;
-     }
-     if(column - 10 < 0)
-     {
-       column = 0;
-     }
-     if (column + 40 > height)
-     {
-      column = 850 ;
+       if(darn == "UP")
+       {
+        row -= 50; 
+        keyPressed = false ;
+       }
+       if(darn == "DOWN")
+       {
+        row +=  50; 
+        keyPressed = false ; 
+       }
+       if(darn == "LEFT")
+       {
+        column -= 50; 
+        keyPressed = false ;
+       }
+       if(darn == "RIGHT")
+       {
+        column +=  50; 
+        keyPressed = false ;
+       }
      }
    }
   }
   
   void display()
   {
-   fill(#FFD700);
-    if(key == CODED)
+   if(darn == "UP")
+   {
+     line(0 + column ,50 + row ,25 + column ,0 + row);
+     line(50 + column ,50 + row ,25 + column ,0 + row);
+   }
+   if(darn == "DOWN")
+   {
+    line(0 + column ,0 + row ,25 + column ,50 + row);
+    line(50 + column ,0 + row ,25 + column ,50 + row);
+   }
+   if(darn == "LEFT")
+   {
+    line(50 + column ,0 + row ,0 + column ,25 + row);
+    line(50 + column ,50 + row ,0 + column ,25 + row);
+   }
+   if(darn == "RIGHT")
+   {
+    line(0 + column ,0 + row ,50 + column ,25 + row);
+    line(0 + column ,50 + row ,50 + column ,25 + row);
+   }
+  }
+  void turnLeft()
+  {
+   if(keyPressed == true)
+   {
+    if(keyCode == ip.left())
     {
-     if(keyCode == UP)
+     if(darn == "UP")
      {
-      triangle(25 + row,10 + column,5 + row,40 + column,45 + row,40 + column);
+      darn = "LEFT"  ;
+      keyPressed = false ;
      }
-     if(keyCode == DOWN)
+     else if(darn == "LEFT")
      {
-      triangle(25 + row,40 + column,5 + row,10 + column,45 + row,10 + column);
+      darn = "DOWN"  ;
+      keyPressed = false ;
      }
-     if(keyCode == LEFT)
+     else if(darn == "DOWN")
      {
-      triangle(10 + row,25 + column,40 + row,5 + column,40 + row,45 + column);
+      darn = "RIGHT"  ;
+      keyPressed = false ;
      }
-     if(keyCode == RIGHT)
+     else if(darn == "RIGHT")
      {
-      triangle(40 + row,25 + column,10 + row,5 + column,10 + row,45 + column);
+      darn = "UP"  ;
+      keyPressed = false ;
      }
     }
    }
-}  
+  }
+  
+  void turnRight()
+  {
+   if(keyPressed == true)
+   {
+    if(keyCode == ip.right())
+    {
+     if(darn == "UP")
+     {
+      darn = "RIGHT"  ;
+      keyPressed = false ;
+     }
+     else if(darn == "RIGHT")
+     {
+      darn = "DOWN"  ;
+      keyPressed = false ;
+     }
+     else if(darn == "DOWN")
+     {
+      darn = "LEFT"  ;
+      keyPressed = false ;
+     }
+     else if(darn == "LEFT")
+     {
+      darn = "UP" ;
+      keyPressed = false ;
+     }
+    }
+   }
+  }
+  
+  void isBlocked()
+  {
+   if (keyPressed == true )
+   {
+     if(keyCode == ip.up())
+     {
+       if(darn == "UP")
+       {
+         if(row <= 0)
+         {
+           keyPressed = false ;
+         }
+         else if(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize] == 1)
+         {
+           keyPressed = false ;
+         }
+       }
+       if(darn == "DOWN")
+       {
+         if(row + world.blockSize >= height)
+         {
+           keyPressed = false ;
+         }
+         else if(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize] == 1)
+         {
+           keyPressed = false ;
+         }
+       }
+       if(darn == "LEFT")
+       {
+         if(column <= 0)
+         {
+           keyPressed = false ;
+         }
+         else if(world.position[  (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize] == 1)
+         {
+           keyPressed = false ;
+         }
+       }
+       if(darn == "RIGHT")
+       {
+         if(column + world.blockSize >= width)
+         {
+           keyPressed = false ;
+         }
+         else if(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize] == 1)
+         {
+           keyPressed = false ;
+         }
+       }
+     }
+   }
+  }
+  
+  void isOnTarget()
+  {
+   if (keyPressed == true )
+   {
+     if(keyCode == ip.up())
+     {
+       if(darn == "UP")
+       {
+         if(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize] == 2)
+         {
+           row -= 50; 
+           world.state = 0 ;
+           keyPressed = false ;
+         }
+       }
+       if(darn == "DOWN")
+       {
+         if(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize] == 2)
+         {
+           row += 50;
+           world.state = 0 ;
+           keyPressed = false ;
+         }
+       }
+       if(darn == "LEFT")
+       {
+         if(world.position[ (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize] == 2)
+         {
+           column -= 50;
+           world.state = 0 ;
+           keyPressed = false ;
+         }
+       }
+       if(darn == "RIGHT")
+       {
+         if(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize] == 2)
+         {
+           column += 50 ;
+           world.state = 0 ;
+           keyPressed = false ;
+         }
+       }
+     }
+   }
+  }
+}
+
+class InputProcessor
+{ 
+  char up ;
+  char down ;
+  char left ;
+  char right ;
+  
+  void setUp()
+  {
+    up = UP ;
+  }
+  
+  void setDown()
+  {
+    down = DOWN ;
+  }
+  
+  void setLeft()
+  {
+    left = LEFT ;
+  }
+  
+  void setRight()
+  {
+    right = RIGHT ;
+  }
+  
+  char up()
+  {
+    return up ;
+  }
+  
+  char down()
+  {
+    return down ;
+  }
+  
+  char left()
+  {
+    return left ;
+  }
+  
+  char right()
+  {
+    return right ;
+  }
+}
