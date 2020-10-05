@@ -18,18 +18,17 @@ void draw()
       if(mouseX > width/2-20 && mouseX < width/2 + 20){
           if(mouseY > height/2 - 20 && mouseY < height/2 + 20){
             mouseClicked();
-          }
-       }
+          }// y-axis condition
+       }// x-axis condition
     if(key == 't'){
       rectMode(CENTER);
        rect(width/2 - 20,height/2 - 20, width/2 + 20, height/2 + 20); 
        fill(255,0,0);
        text("SAVE",width/2 - 100,height/2 - 100);
        noLoop();
-       
-    }
-  }
-}
+    }// button t condition
+  }//keyPressed
+}//draw function
 
 void mouseClicked(){
   world.save(); 
@@ -37,14 +36,10 @@ void mouseClicked(){
 }
 class World
 {
-  Robot robot = new Robot();
   int blockSize =50 ;
   String[][] position = new String[500/blockSize][500/blockSize];
   int state = 1;
-  
-  World()
-  {
-  }
+  Robot robot = new Robot(blockSize);
   
   void draw_map()
   {
@@ -55,8 +50,8 @@ class World
         line(i*50,0,i*50,height);
         line(0,j*50,width,j*50);
         position[i][j] = "0";
-      }
-    }
+      }// j loop
+    }// i loop
     robot.display();
     robot.move(); 
     robot.isBlocked();
@@ -66,10 +61,11 @@ class World
     robot.turnRight();
     this.draw_barrier();
     this.draw_target(5,2);
-  }
+  }//draw_map method
   
   void draw_target(int tmpRow, int tmpCol)
   {
+    position[tmpRow][tmpCol] = "2";
     if(state == 1 )
     {
       int x = (tmpCol-1) * (blockSize); // find axis values from Row and column
@@ -102,10 +98,10 @@ class World
       }
       stroke(0);
       strokeWeight(2);
-    }
-    
-  }
-  
+      
+    }// state condition
+  }//draw_target method
+
   void draw_barrier()
   {
     for(int i = 0 ;i < 1 ; i++)
@@ -115,8 +111,8 @@ class World
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
        position[i][j] = "1";
-      }
-    }
+      }// j loop
+    }// i loop
     
     for(int i = 2 ;i < 10 ; i++)
     {
@@ -125,8 +121,8 @@ class World
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
        position[i][j] = "1";
-      }
-    }
+      }// j loop
+    }// i loop
     
     for(int i = 3 ;i < 5 ; i++)
     {
@@ -135,8 +131,8 @@ class World
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
        position[i][j] = "1";
-      }
-    }
+      }// j loop
+    }// i loop
     
     for(int i = 3 ;i < 10 ; i+=2)
     {
@@ -145,9 +141,9 @@ class World
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
        position[i][j] = "1";
-      }
-    }
-  }
+      }// j loop
+    }//i loop
+  }//draw_barrier method
   
   void save(){
     String[] tmpStr = new String[height/blockSize + 2]; 
@@ -158,22 +154,25 @@ class World
         
         if(j != 0){
           tmpStr[i] += ",";  
-        }
+        }//condition
         tmpStr[i] += position[i][j];
-      }
-    }
+      }// j loop
+    }// i loop
     tmpStr[height/blockSize] = str(robot.getRow());
     tmpStr[height/blockSize + 1] = str(robot.getColumn());
     saveStrings("saved.txt", tmpStr);
-  }
+  }// save method
 }
 
 class Robot
 {
+  int blockSize;
   int row = 0 ;
   int column = 0 ;
   String side = "UP" ;
-  
+  Robot(int tmpBlockSize){
+    blockSize = tmpBlockSize; 
+  }
   void move()
   {
    if (keyPressed == true )
@@ -182,27 +181,27 @@ class Robot
      {
        if(side == "UP")
        {
-        row -= 50; 
+        row -= blockSize; 
         keyPressed = false ;
        }
        if(side == "DOWN")
        {
-        row +=  50; 
+        row +=  blockSize; 
         keyPressed = false ; 
        }
        if(side == "LEFT")
        {
-        column -= 50; 
+        column -= blockSize; 
         keyPressed = false ;
        }
        if(side == "RIGHT")
        {
-        column +=  50; 
+        column +=  blockSize; 
         keyPressed = false ;
        }
-     }
-   }
-  }
+     }// button condition
+   }// keyPressed condition
+  }// move method
   
   void display()
   {
@@ -226,7 +225,8 @@ class Robot
     line(0 + column ,0 + row ,50 + column ,25 + row);
     line(0 + column ,50 + row ,50 + column ,25 + row);
    }
-  }
+  }// display method
+  
   void turnLeft()
   {
    if(keyPressed == true)
@@ -253,9 +253,9 @@ class Robot
       side = "UP"  ;
       keyPressed = false ;
      }
-    }
-   }
-  }
+    }// button condition
+   }// keyPressed comdition
+  }// turnLeft method
   
   void turnRight()
   {
@@ -283,9 +283,9 @@ class Robot
       side = "UP" ;
       keyPressed = false ;
      }
-    }
-   }
-  }
+    }// button condition
+   }// keyPressed condition
+  }// turnRight method
   
   void isBlocked()
   {
@@ -337,9 +337,9 @@ class Robot
            keyPressed = false ;
          }
        }
-     }
-   }
-  }
+     }// button condition
+   }// keyPressed condition
+  }// isBlocked method
   
   void isOnTarget()
   {
@@ -383,9 +383,9 @@ class Robot
            keyPressed = false ;
          }
        }
-     }
-   }
-  }
+     }// button condition
+   }// keyPressed condition
+  }// isOnTarget method
   
   int getRow(){
     return row;  
