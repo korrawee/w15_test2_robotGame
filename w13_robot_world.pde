@@ -1,44 +1,24 @@
 World world = new World();
-Robot robot = new Robot();
 InputProcessor ip = new InputProcessor();
 void setup()
 {
-  size(500,500);
+  size(500, 500);
+  strokeWeight(2);
 }
 
 void draw()
 {
   background(255);
   world.draw_map();
-  world.draw_target();
-  world.draw_barrier();
-  robot.display();
-  robot.isBlocked();
-  robot.isOnTarget();
-  robot.move();
-  robot.turnLeft();
-  robot.turnRight();
   ip.setUp();
   ip.setDown();
   ip.setLeft();
   ip.setRight();
 }
 
-void polygon(float x, float y, float radius, int npoints) 
-{
-  float angle = TWO_PI / npoints;
-  beginShape();
-  for (float a = 0; a < TWO_PI; a += angle) 
-  {
-    float sx = x + cos(a) * radius;
-    float sy = y + sin(a) * radius;
-    vertex(sx, sy);
-  }
-  endShape(CLOSE);
-}
-
 class World
 {
+  Robot robot = new Robot();
   int blockSize =50 ;
   int[][] position = new int[500/blockSize][500/blockSize];
   int state = 1;
@@ -58,15 +38,51 @@ class World
         position[i][j] = 0;
       }
     }
+    robot.display();
+    robot.move(); 
+    robot.isBlocked();
+    robot.isOnTarget();
+    robot.move();
+    robot.turnLeft();
+    robot.turnRight();
+    this.draw_barrier();
+    this.draw_target(5,2);
   }
   
-  void draw_target()
+  void draw_target(int tmpRow, int tmpCol)
   {
     if(state == 1 )
     {
-      fill(#FA8072);
-      polygon(475,475,20,8);
-      position[475/world.blockSize][475/world.blockSize] = 2;
+      int x = (tmpCol-1) * (blockSize); // find axis values from Row and column
+      int y = (tmpRow * blockSize) ;
+      int dLeftX, dLeftY;
+      int dRightX, dRightY;
+      int uLeftX, uLeftY;
+      int uRightX, uRightY;
+      
+      stroke(190, 251, 19);
+      strokeWeight(random(1,2) * 2);
+      line(x, y - blockSize, x + blockSize, y - blockSize); // change block outline's color
+      line(x, y, x + blockSize, y);
+      line(x, y - blockSize, x, y);
+      line(x + blockSize, y - blockSize, x + blockSize, y);
+      
+      for(int i = 0; i < blockSize/4; i+= 2){ // draw each three corner
+        dLeftX = x;
+        dLeftY = y;
+        dRightX =dLeftX + blockSize;
+        dRightY = y;
+        uLeftX = x;
+        uLeftY = y - blockSize;
+        uRightX = dLeftX + blockSize;
+        uRightY = uLeftY;
+        line(dLeftX + i, dLeftY, dLeftX, dLeftY - i);
+        line( dRightX - i, dRightY, dRightX, dRightY - i);
+        line(uLeftX + i, uLeftY, uLeftX, uLeftY + i);
+        line(uRightX - i, uRightY, uRightX, uRightY + i);
+      }
+      stroke(0);
+      strokeWeight(2);
     }
     
   }
