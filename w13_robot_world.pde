@@ -14,13 +14,32 @@ void draw()
   ip.setDown();
   ip.setLeft();
   ip.setRight();
+  if(keyPressed){
+      if(mouseX > width/2-20 && mouseX < width/2 + 20){
+          if(mouseY > height/2 - 20 && mouseY < height/2 + 20){
+            mouseClicked();
+          }
+       }
+    if(key == 't'){
+      rectMode(CENTER);
+       rect(width/2 - 20,height/2 - 20, width/2 + 20, height/2 + 20); 
+       fill(255,0,0);
+       text("SAVE",width/2 - 100,height/2 - 100);
+       noLoop();
+       
+    }
+  }
 }
 
+void mouseClicked(){
+  world.save(); 
+  exit();  
+}
 class World
 {
   Robot robot = new Robot();
   int blockSize =50 ;
-  int[][] position = new int[500/blockSize][500/blockSize];
+  String[][] position = new String[500/blockSize][500/blockSize];
   int state = 1;
   
   World()
@@ -29,13 +48,13 @@ class World
   
   void draw_map()
   {
-    for(int i = 0 ; i < width/blockSize ; i++)
+    for(int i = 0 ; i < (width/blockSize); i++)
     {
-      for(int j = 0 ; j < height/blockSize ; j++)
+      for(int j = 0 ; j < (height/blockSize); j++)
       {
         line(i*50,0,i*50,height);
         line(0,j*50,width,j*50);
-        position[i][j] = 0;
+        position[i][j] = "0";
       }
     }
     robot.display();
@@ -95,7 +114,7 @@ class World
       {
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = 1;
+       position[i][j] = "1";
       }
     }
     
@@ -105,7 +124,7 @@ class World
       {
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = 1;
+       position[i][j] = "1";
       }
     }
     
@@ -115,7 +134,7 @@ class World
       {
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = 1;
+       position[i][j] = "1";
       }
     }
     
@@ -125,9 +144,27 @@ class World
       {
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = 1;
+       position[i][j] = "1";
       }
     }
+  }
+  
+  void save(){
+    String[] tmpStr = new String[height/blockSize + 2]; 
+    
+    for(int i=0; i < height/blockSize; i++){
+      tmpStr[i] = "";
+      for(int j=0; j < width/blockSize; j++){
+        
+        if(j != 0){
+          tmpStr[i] += ",";  
+        }
+        tmpStr[i] += position[i][j];
+      }
+    }
+    tmpStr[height/blockSize] = str(robot.getRow());
+    tmpStr[height/blockSize + 1] = str(robot.getColumn());
+    saveStrings("saved.txt", tmpStr);
   }
 }
 
@@ -262,7 +299,7 @@ class Robot
          {
            keyPressed = false ;
          }
-         else if(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize] == 1)
+         else if(match(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize], "1") != null)
          {
            keyPressed = false ;
          }
@@ -273,7 +310,7 @@ class Robot
          {
            keyPressed = false ;
          }
-         else if(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize] == 1)
+         else if(match(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize], "1") != null)
          {
            keyPressed = false ;
          }
@@ -284,7 +321,7 @@ class Robot
          {
            keyPressed = false ;
          }
-         else if(world.position[  (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize] == 1)
+         else if(match(world.position[  (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize], "1") != null)
          {
            keyPressed = false ;
          }
@@ -295,7 +332,7 @@ class Robot
          {
            keyPressed = false ;
          }
-         else if(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize] == 1)
+         else if(match(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize], "1") != null)
          {
            keyPressed = false ;
          }
@@ -312,7 +349,7 @@ class Robot
      {
        if(darn == "UP")
        {
-         if(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize] == 2)
+         if(match(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize], "2") != null)
          {
            row -= 50; 
            world.state = 0 ;
@@ -321,7 +358,7 @@ class Robot
        }
        if(darn == "DOWN")
        {
-         if(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize] == 2)
+         if(match(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize], "2") != null)
          {
            row += 50;
            world.state = 0 ;
@@ -330,7 +367,7 @@ class Robot
        }
        if(darn == "LEFT")
        {
-         if(world.position[ (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize] == 2)
+         if(match(world.position[ (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize], "2") != null)
          {
            column -= 50;
            world.state = 0 ;
@@ -339,7 +376,7 @@ class Robot
        }
        if(darn == "RIGHT")
        {
-         if(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize] == 2)
+         if(match(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize], "2") != null)
          {
            column += 50 ;
            world.state = 0 ;
@@ -348,6 +385,14 @@ class Robot
        }
      }
    }
+  }
+  
+  int getRow(){
+    return row;  
+  }
+  
+  int getColumn(){
+    return column;  
   }
 }
 
