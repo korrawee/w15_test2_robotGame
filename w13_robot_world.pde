@@ -47,7 +47,7 @@ class World
   
   void save(){
     String[] tmpLines = new String[height/blockSize]; 
-    
+    position[robot.getRow()][robot.getColumn()] = "3";
     for(int i=0; i < height/blockSize; i++){
       tmpLines[i] = "";
       
@@ -98,7 +98,7 @@ class World
   
   void draw_target(int tmpRow, int tmpCol)
   {
-    position[tmpRow][tmpCol] = "2";
+    position[tmpRow-1][tmpCol-1] = "2";
     if(state == 1 )
     {
       int x = (tmpCol-1) * (blockSize); // find axis values from Row and column
@@ -404,11 +404,11 @@ class Robot
   }// isOnTarget method
   
   int getRow(){
-    return row/blockSize + 2;  
+    return row/blockSize;  
   }
   
   int getColumn(){
-    return column/blockSize + 2;  
+    return column/blockSize;  
   }
 }
 
