@@ -48,6 +48,7 @@ class World
   void save(){
     String[] tmpLines = new String[height/blockSize]; 
     position[robot.getRow()][robot.getColumn()] = "3";
+    
     for(int i=0; i < height/blockSize; i++){
       tmpLines[i] = "";
       
@@ -62,38 +63,73 @@ class World
   }// save method
   
   void load(){
-    String[] info = loadStrings("saved.txt");
-    String[] tmpLine = {};
-    
-    for(int i=0; i < info.length; i++){
-      tmpLine = split(info[i], ",");
+    try{
+      String[] info = loadStrings("saved.txt");
+      String[] tmpLine = {};
       
-      for(int j=0; j < info.length; j++){
-        position[i][j] = tmpLine[j];  
+      for(int i=0; i < info.length; i++){
+        tmpLine = split(info[i], ",");
+        
+        for(int j=0; j < info.length; j++){
+          position[i][j] = tmpLine[j];  
+        }// j loop
+      }// i loop
+    }catch (NullPointerException error){
+       this.generate();
+    }//catch error
+  }// load method
+  
+  void generate(){
+    int tmpIndex = int(random(1,position.length));
+    int tmpIndex2 = int(random(1,position.length));
+    int tmp;
+    position[0][0] = "3"; //gen. robot
+    position[tmpIndex][tmpIndex2] = "2"; // gen. target
+    
+    for(int i=0; i < position.length; i++){
+      
+      for(int j=0; j < position.length; j++){
+        tmp = int(random(2));
+        if(tmp == 1){
+          position[i][j] = "1"  ;
+        }
+        if(position[i][j] == null){
+          position[i][j] = "0";
+        }// null condition
       }// j loop
     }// i loop
-  }// load method
+  }// generate method
   
   void draw_map()
   {
-    for(int i = 0 ; i < (width/blockSize); i++)
-    {
-      for(int j = 0 ; j < (height/blockSize); j++)
-      {
-        line(i*50,0,i*50,height);
-        line(0,j*50,width,j*50);
-        position[i][j] = "0";
+    
+    for(int i = 0; i < position.length; i++){
+      line(i* 50, 0, i*50, height);
+
+      for(int j = 0; j < position.length; j++){  
+        line(0, j*50,width, j*50);
+
+        if(position[i][j].equals("1")){ // if target's position draw target
+          this.draw_barrier();
+          
+        }else if(position[i][j].equals("2")){ // if barrier's position draw barrier
+          this.draw_target(i+1, j+1); // convert index into row, column
+          
+        }else if(position[i][j].equals("3")){//  if robot's position draw robot
+          robot.display();
+        }
+        if(position == null){
+          position[i][j] = "0";  
+        }
       }// j loop
     }// i loop
-    robot.display();
+
     robot.move(); 
     robot.isBlocked();
     robot.isOnTarget();
     robot.move();
     robot.turnLeft();
     robot.turnRight();
-    this.draw_barrier();
-    this.draw_target(5,2);
   }//draw_map method
   
   void draw_target(int tmpRow, int tmpCol)
@@ -108,8 +144,8 @@ class World
       int uLeftX, uLeftY;
       int uRightX, uRightY;
       
-      stroke(190, 251, 19);
-      strokeWeight(random(1,2) * 2);
+      stroke(100, 250, 100);
+      strokeWeight(random(0,1) * 5);
       line(x, y - blockSize, x + blockSize, y - blockSize); // change block outline's color
       line(x, y, x + blockSize, y);
       line(x, y - blockSize, x, y);
@@ -176,6 +212,7 @@ class World
        position[i][j] = "1";
       }// j loop
     }//i loop
+    stroke(0);
   }//draw_barrier method
   
 }
