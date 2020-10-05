@@ -46,19 +46,19 @@ class World
   Robot robot = new Robot(blockSize);
   
   void save(){
-    String[] tmpStr = new String[height/blockSize]; 
+    String[] tmpLines = new String[height/blockSize]; 
     
     for(int i=0; i < height/blockSize; i++){
-      tmpStr[i] = "";
+      tmpLines[i] = "";
       
       for(int j=0; j < width/blockSize; j++){
         if(j != 0){
-          tmpStr[i] += ",";  
+          tmpLines[i] += ",";  
         }//condition
-        tmpStr[i] += position[i][j];
+        tmpLines[i] += position[i][j];
       }// j loop
     }// i loop
-    saveStrings("saved.txt", tmpStr);
+    saveStrings("saved.txt", tmpLines);
   }// save method
   
   void load(){
@@ -404,11 +404,11 @@ class Robot
   }// isOnTarget method
   
   int getRow(){
-    return row;  
+    return row/blockSize + 2;  
   }
   
   int getColumn(){
-    return column;  
+    return column/blockSize + 2;  
   }
 }
 
