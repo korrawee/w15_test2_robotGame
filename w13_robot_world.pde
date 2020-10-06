@@ -110,11 +110,11 @@ class World
       for(int j = 0; j < position.length; j++){  
         line(0, j*50,width, j*50);
 
-        if(position[i][j] == 1){ // if target's position draw target
-          this.draw_barrier(3,2); // draw_barrier(row, column)
+        if(position[i][j] == 1){ // if barrier's position draw target
+          this.draw_barrier(i, j); // draw_barrier(row, column)
           
-        }else if(position[i][j] == 2){ // if barrier's position draw barrier
-          this.draw_target(i+1, j+1); // convert index into row, column
+        }else if(position[i][j] == 2){ // if target's position draw barrier
+          this.draw_target(i, j); // convert index into row, column
           
         }else if(position[i][j] == 3){//  if robot's position draw robot
           robot.display();
@@ -132,7 +132,6 @@ class World
   
   void draw_target(int tmpRow, int tmpCol)
   {
-    position[tmpRow-1][tmpCol-1] = 2;
     if(state == 1 )
     {
       int x = (tmpCol-1) * (blockSize); // find axis values from Row and column
