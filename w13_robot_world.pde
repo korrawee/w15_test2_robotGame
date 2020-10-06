@@ -1,20 +1,18 @@
 World world = new World();
 InputProcessor ip = new InputProcessor();
+
 void setup()
 {
   size(500, 500);
   strokeWeight(2);
-  world.load();
+  ip.load(); 
 }
 
 void draw()
 {
   background(255);
   world.draw_map();
-  ip.setUp();
-  ip.setDown();
-  ip.setLeft();
-  ip.setRight();
+  
   if(keyPressed){
       if(mouseX > width/2-20 && mouseX < width/2 + 20){
           if(mouseY > height/2 - 20 && mouseY < height/2 + 20){
@@ -45,6 +43,9 @@ class World
   String[][] position = new String[500/blockSize][500/blockSize];
   Robot robot = new Robot(blockSize);
   
+  World(){
+   this.load();
+  }
   void save(){
     String[] tmpLines = new String[height/blockSize]; 
     position[robot.getRow()][robot.getColumn()] = "3";
@@ -232,7 +233,7 @@ class Robot
   {
    if (keyPressed == true )
    {
-     if(keyCode == ip.up())
+     if(key == ip.up())
      {
        if(side == "UP")
        {
@@ -286,7 +287,7 @@ class Robot
   {
    if(keyPressed == true)
    {
-    if(keyCode == ip.left())
+    if(key == ip.left())
     {
      if(side == "UP")
      {
@@ -316,7 +317,7 @@ class Robot
   {
    if(keyPressed == true)
    {
-    if(keyCode == ip.right())
+    if(key == ip.right())
     {
      if(side == "UP")
      {
@@ -346,7 +347,7 @@ class Robot
   {
    if (keyPressed == true )
    {
-     if(keyCode == ip.up())
+     if(key == ip.up())
      {
        if(side == "UP")
        {
@@ -400,7 +401,7 @@ class Robot
   {
    if (keyPressed == true )
    {
-     if(keyCode == ip.up())
+     if(key == ip.up())
      {
        if(side == "UP")
        {
@@ -458,24 +459,26 @@ class InputProcessor
   char left ;
   char right ;
   
-  void setUp()
-  {
-    up = UP ;
-  }
+  void load(){
+    File f = new File(sketchPath("control.txt"));
+    String[] btn;
+    
+    if(f.exists()){
+      String[] lines = loadStrings("control.txt");
+      btn = lines[0].split(",");
+      up = btn[0].charAt(0);
+      down = btn[1].charAt(0);
+      left = btn[2].charAt(0);
+      right = btn[3].charAt(0);
+    }else{
+      this.createFile();
+      this.load();
+    }// file exist condition
+  }// load method
   
-  void setDown()
-  {
-    down = DOWN ;
-  }
-  
-  void setLeft()
-  {
-    left = LEFT ;
-  }
-  
-  void setRight()
-  {
-    right = RIGHT ;
+  void createFile(){
+    String[] defaultBtn = {"w,s,a,d"};
+    saveStrings("control.txt", defaultBtn);  
   }
   
   char up()
