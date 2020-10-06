@@ -88,11 +88,11 @@ class World
     int tmpIndex2 = int(random(1,position.length));
     int tmp;
     position[0][0] = 3; //gen. robot
-    position[tmpIndex][tmpIndex2] = 3; // gen. target
+    position[tmpIndex][tmpIndex2] = 2; // gen. target
     
-    for(int i=0; i < position.length; i++){
+    for(int i=1; i < position.length; i++){
       
-      for(int j=0; j < position.length; j++){
+      for(int j=1; j < position.length; j++){
         tmp = int(random(2));
         if(tmp == 1){
           position[i][j] = 1  ;
@@ -111,7 +111,7 @@ class World
         line(0, j*50,width, j*50);
 
         if(position[i][j] == 1){ // if target's position draw target
-          this.draw_barrier();
+          this.draw_barrier(3,2); // draw_barrier(row, column)
           
         }else if(position[i][j] == 2){ // if barrier's position draw barrier
           this.draw_target(i+1, j+1); // convert index into row, column
@@ -169,47 +169,12 @@ class World
     }// state condition
   }//draw_target method
 
-  void draw_barrier()
+  void draw_barrier(int tmpRow, int tmpCol)
   {
-    for(int i = 0 ;i < 1 ; i++)
-    {
-      for(int j = 2 ;j < 10 ;j++)
-      {
-       fill(#F4A460);
-       rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = 1;
-      }// j loop
-    }// i loop
-    
-    for(int i = 2 ;i < 10 ; i++)
-    {
-      for(int j = 0 ;j < 1 ;j++)
-      {
-       fill(#F4A460);
-       rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = 1;
-      }// j loop
-    }// i loop
-    
-    for(int i = 3 ;i < 5 ; i++)
-    {
-      for(int j = 3 ;j < 10 ;j+=2)
-      {
-       fill(#F4A460);
-       rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = 1;
-      }// j loop
-    }// i loop
-    
-    for(int i = 3 ;i < 10 ; i+=2)
-    {
-      for(int j = 3 ;j < 5 ;j++)
-      {
-       fill(#F4A460);
-       rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = 1;
-      }// j loop
-    }//i loop
+    int x = (tmpCol - 1) * blockSize;
+    int y = (tmpRow - 1) * blockSize;
+    fill(#F4A460);
+    rect( x, y, blockSize, blockSize);
     stroke(0);
   }//draw_barrier method
   
