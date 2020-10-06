@@ -33,6 +33,7 @@ void mouseClicked(){
   world.save(); 
   exit();  
 }
+
 class World
 {
   int blockSize =50 ;
@@ -40,7 +41,7 @@ class World
   String[][] barrierPosition;
   String[][] targetPosition;
   String[][] robotPosition;
-  String[][] position = new String[500/blockSize][500/blockSize];
+  int[][] position = new int[500/blockSize][500/blockSize];
   Robot robot = new Robot(blockSize);
   
   World(){
@@ -48,7 +49,7 @@ class World
   }
   void save(){
     String[] tmpLines = new String[height/blockSize]; 
-    position[robot.getRow()][robot.getColumn()] = "3";
+    position[robot.getRow()][robot.getColumn()] = 3;
     
     for(int i=0; i < height/blockSize; i++){
       tmpLines[i] = "";
@@ -74,7 +75,7 @@ class World
         tmpLine = split(info[i], ",");
         
         for(int j=0; j < info.length; j++){
-          position[i][j] = tmpLine[j];  
+          position[i][j] = int(tmpLine[j]);  
         }// j loop
       }// i loop
     }else{
@@ -86,19 +87,16 @@ class World
     int tmpIndex = int(random(1,position.length));
     int tmpIndex2 = int(random(1,position.length));
     int tmp;
-    position[0][0] = "3"; //gen. robot
-    position[tmpIndex][tmpIndex2] = "2"; // gen. target
+    position[0][0] = 3; //gen. robot
+    position[tmpIndex][tmpIndex2] = 3; // gen. target
     
     for(int i=0; i < position.length; i++){
       
       for(int j=0; j < position.length; j++){
         tmp = int(random(2));
         if(tmp == 1){
-          position[i][j] = "1"  ;
+          position[i][j] = 1  ;
         }
-        if(position[i][j] == null){
-          position[i][j] = "0";
-        }// null condition
       }// j loop
     }// i loop
   }// generate method
@@ -112,17 +110,14 @@ class World
       for(int j = 0; j < position.length; j++){  
         line(0, j*50,width, j*50);
 
-        if(position[i][j].equals("1")){ // if target's position draw target
+        if(position[i][j] == 1){ // if target's position draw target
           this.draw_barrier();
           
-        }else if(position[i][j].equals("2")){ // if barrier's position draw barrier
+        }else if(position[i][j] == 2){ // if barrier's position draw barrier
           this.draw_target(i+1, j+1); // convert index into row, column
           
-        }else if(position[i][j].equals("3")){//  if robot's position draw robot
+        }else if(position[i][j] == 3){//  if robot's position draw robot
           robot.display();
-        }
-        if(position == null){
-          position[i][j] = "0";  
         }
       }// j loop
     }// i loop
@@ -137,7 +132,7 @@ class World
   
   void draw_target(int tmpRow, int tmpCol)
   {
-    position[tmpRow-1][tmpCol-1] = "2";
+    position[tmpRow-1][tmpCol-1] = 2;
     if(state == 1 )
     {
       int x = (tmpCol-1) * (blockSize); // find axis values from Row and column
@@ -182,7 +177,7 @@ class World
       {
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = "1";
+       position[i][j] = 1;
       }// j loop
     }// i loop
     
@@ -192,7 +187,7 @@ class World
       {
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = "1";
+       position[i][j] = 1;
       }// j loop
     }// i loop
     
@@ -202,7 +197,7 @@ class World
       {
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = "1";
+       position[i][j] = 1;
       }// j loop
     }// i loop
     
@@ -212,7 +207,7 @@ class World
       {
        fill(#F4A460);
        rect(j*50,i*50,blockSize,blockSize);
-       position[i][j] = "1";
+       position[i][j] = 1;
       }// j loop
     }//i loop
     stroke(0);
@@ -355,7 +350,7 @@ class Robot
          {
            keyPressed = false ;
          }
-         else if(match(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize], "1") != null)
+         else if(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize] == 1)
          {
            keyPressed = false ;
          }
@@ -366,7 +361,7 @@ class Robot
          {
            keyPressed = false ;
          }
-         else if(match(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize], "1") != null)
+         else if(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize] == 1)
          {
            keyPressed = false ;
          }
@@ -377,7 +372,7 @@ class Robot
          {
            keyPressed = false ;
          }
-         else if(match(world.position[  (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize], "1") != null)
+         else if(world.position[  (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize] == 1)
          {
            keyPressed = false ;
          }
@@ -388,7 +383,7 @@ class Robot
          {
            keyPressed = false ;
          }
-         else if(match(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize], "1") != null)
+         else if(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize] == 1)
          {
            keyPressed = false ;
          }
@@ -405,7 +400,7 @@ class Robot
      {
        if(side == "UP")
        {
-         if(match(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize], "2") != null)
+         if(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize] == 2)
          {
            row -= 50; 
            world.state = 0 ;
@@ -414,7 +409,7 @@ class Robot
        }
        if(side == "DOWN")
        {
-         if(match(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize], "2") != null)
+         if(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize] == 2)
          {
            row += 50;
            world.state = 0 ;
@@ -423,7 +418,7 @@ class Robot
        }
        if(side == "LEFT")
        {
-         if(match(world.position[ (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize], "2") != null)
+         if(world.position[ (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize] == 2)
          {
            column -= 50;
            world.state = 0 ;
@@ -432,7 +427,7 @@ class Robot
        }
        if(side == "RIGHT")
        {
-         if(match(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize], "2") != null)
+         if(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize] == 2)
          {
            column += 50 ;
            world.state = 0 ;
