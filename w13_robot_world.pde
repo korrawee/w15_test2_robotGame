@@ -1,12 +1,12 @@
 World world = new World();
-InputProcessor ip = new InputProcessor();
+
 
 void setup()
 {
   size(500, 500);
   strokeWeight(2);
   world.load();
-  ip.load(); 
+  world.robot.ip.load(); 
 }
 
 void draw()
@@ -28,6 +28,7 @@ void draw()
        noLoop();
     }// button t condition
   }//keyPressed
+  
 }//draw function
 
 void mouseClicked(){
@@ -203,6 +204,8 @@ class Robot
   int i ;
   int j ;
   String side = "UP" ;
+  InputProcessor ip = new InputProcessor();
+  
   Robot(int tmpBlockSize){
     blockSize = tmpBlockSize; 
   }
