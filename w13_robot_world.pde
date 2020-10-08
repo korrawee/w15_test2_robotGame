@@ -5,6 +5,7 @@ void setup()
 {
   size(500, 500);
   strokeWeight(2);
+  world.load();
   ip.load(); 
 }
 
@@ -44,13 +45,22 @@ class World
   int[][] position = new int[500/blockSize][500/blockSize];
   Robot robot = new Robot(blockSize);
   
-  World(){
-   this.load();
+  World()
+  {
   }
   void save(){
     String[] tmpLines = new String[height/blockSize]; 
-    position[robot.getRow()][robot.getColumn()] = 3;
-    
+    for(int i = 0; i < height/blockSize; i++)
+    {
+     for(int j = 0; j < width/blockSize; j++)
+     {
+      if(position[i][j] == 3)
+      {
+        position[i][j] = 0;
+      }
+     }
+    }
+    position[robot.get_Row()][robot.get_Column()] = 3;
     for(int i=0; i < height/blockSize; i++){
       tmpLines[i] = "";
       
@@ -65,16 +75,18 @@ class World
   }// save method
   
   void load(){
-    File f = new File(sketchPath("saved.txt"));
+    File z = new File(sketchPath("saved.txt"));
     
-    if(f.exists()){
+    if(z.exists()){
       String[] info = loadStrings("saved.txt");
       String[] tmpLine = {};
       
-      for(int i=0; i < info.length; i++){
+      for(int i=0; i < info.length; i++)
+      {
         tmpLine = split(info[i], ",");
         
-        for(int j=0; j < info.length; j++){
+        for(int j=0; j < info.length; j++)
+        {
           position[i][j] = int(tmpLine[j]);  
         }// j loop
       }// i loop
@@ -90,12 +102,17 @@ class World
     position[0][0] = 3; //gen. robot
     position[tmpIndex][tmpIndex2] = 2; // gen. target
     
-    for(int i=1; i < position.length; i++){
+    for(int i=0; i < position.length; i+=1){
       
-      for(int j=1; j < position.length; j++){
-        tmp = int(random(2));
-        if(tmp == 1){
-          position[i][j] = 1  ;
+      for(int j=0; j < position.length; j+=2)
+      {
+        if(position[i][j] != 2 && position[i][j] != 3)
+        {
+          tmp = int(random(2));
+          if(tmp == 1)
+          {
+            position[i][j] = 1  ;
+          }
         }
       }// j loop
     }// i loop
@@ -110,19 +127,18 @@ class World
       for(int j = 0; j < position.length; j++){  
         line(0, j*50,width, j*50);
 
-        if(position[i][j] == 1){ // if barrier's position draw target
+        if(position[i][j] == 1 ){ // if barrier's position draw target
           this.draw_barrier(i, j); // draw_barrier(row, column)
           
-        }else if(position[i][j] == 2){ // if target's position draw barrier
+        }if(position[i][j] == 2 ){ // if target's position draw barrier
           this.draw_target(i, j); // convert index into row, column
           
-        }else if(position[i][j] == 3){//  if robot's position draw robot
-          robot.display();
+        }if(position[i][j] == 3){//  if robot's position draw robot
+          robot.display(i,j);
         }
       }// j loop
     }// i loop
 
-    robot.move(); 
     robot.isBlocked();
     robot.isOnTarget();
     robot.move();
@@ -134,7 +150,7 @@ class World
   {
     if(state == 1 )
     {
-      int x = (tmpCol-1) * (blockSize); // find axis values from Row and column
+      int x = (tmpCol * blockSize); // find axis values from Row and column
       int y = (tmpRow * blockSize) ;
       int dLeftX, dLeftY;
       int dRightX, dRightY;
@@ -142,19 +158,19 @@ class World
       int uRightX, uRightY;
       
       stroke(100, 250, 100);
-      strokeWeight(random(0,1) * 5);
-      line(x, y - blockSize, x + blockSize, y - blockSize); // change block outline's color
-      line(x, y, x + blockSize, y);
-      line(x, y - blockSize, x, y);
-      line(x + blockSize, y - blockSize, x + blockSize, y);
+      strokeWeight(random(0,1) * 5); // change block outline's color
+      line(x, y , x + blockSize, y ); // up
+      line(x, y + blockSize, x + blockSize, y + blockSize); //down
+      line(x, y , x, y + blockSize); //left
+      line(x + blockSize , y , x + blockSize, y + blockSize); // right
       
       for(int i = 0; i < blockSize/4; i+= 2){ // draw each three corner
         dLeftX = x;
-        dLeftY = y;
+        dLeftY = y + blockSize;
         dRightX =dLeftX + blockSize;
-        dRightY = y;
+        dRightY = y + blockSize;
         uLeftX = x;
-        uLeftY = y - blockSize;
+        uLeftY = y ;
         uRightX = dLeftX + blockSize;
         uRightY = uLeftY;
         line(dLeftX + i, dLeftY, dLeftX, dLeftY - i);
@@ -170,8 +186,8 @@ class World
 
   void draw_barrier(int tmpRow, int tmpCol)
   {
-    int x = (tmpCol - 1) * blockSize;
-    int y = (tmpRow - 1) * blockSize;
+    int x = (tmpCol ) * blockSize;
+    int y = (tmpRow ) * blockSize;
     fill(#F4A460);
     rect( x, y, blockSize, blockSize);
     stroke(0);
@@ -184,6 +200,8 @@ class Robot
   int blockSize;
   int row = 0 ;
   int column = 0 ;
+  int i ;
+  int j ;
   String side = "UP" ;
   Robot(int tmpBlockSize){
     blockSize = tmpBlockSize; 
@@ -218,28 +236,30 @@ class Robot
    }// keyPressed condition
   }// move method
   
-  void display()
+  void display(int tmpx , int tmpy)
   {
    if(side == "UP")
    {
-     line(0 + column ,50 + row ,25 + column ,0 + row);
-     line(50 + column ,50 + row ,25 + column ,0 + row);
+     line(tmpy*50 + column ,(tmpx*50)+50 + row ,(tmpy*50)+25 + column ,tmpx*50 + row);
+     line((tmpy*50)+50 + column ,(tmpx*50)+50 + row ,(tmpy*50)+25 + column ,tmpx*50 + row);
    }
    if(side == "DOWN")
    {
-    line(0 + column ,0 + row ,25 + column ,50 + row);
-    line(50 + column ,0 + row ,25 + column ,50 + row);
+    line(tmpy*50 + column ,tmpx*50 + row ,(tmpy*50)+25 + column ,(tmpx*50)+50 + row);
+    line((tmpy*50)+50 + column ,tmpx*50 + row ,(tmpy*50)+25 + column ,(tmpx*50)+50 + row);
    }
    if(side == "LEFT")
    {
-    line(50 + column ,0 + row ,0 + column ,25 + row);
-    line(50 + column ,50 + row ,0 + column ,25 + row);
+    line((tmpy*50)+50 + column ,tmpx*50 + row ,tmpy*50 + column ,(tmpx*50)+25 + row);
+    line((tmpy*50)+50 + column ,(tmpx*50)+50 + row ,tmpy*50 + column ,(tmpx*50)+25 + row);
    }
    if(side == "RIGHT")
    {
-    line(0 + column ,0 + row ,50 + column ,25 + row);
-    line(0 + column ,50 + row ,50 + column ,25 + row);
+    line(tmpy*50 + column ,tmpx*50 + row ,(tmpy*50)+50 + column ,(tmpx*50)+25 + row);
+    line(tmpy*50 + column ,(tmpx*50)+50 + row ,(tmpy*50)+50 + column ,(tmpx*50)+25 + row);
    }
+    i = (tmpx*50 + row) ;
+    j = (tmpy*50 + column) ;
   }// display method
   
   void turnLeft()
@@ -310,44 +330,44 @@ class Robot
      {
        if(side == "UP")
        {
-         if(row <= 0)
+         if(this.i <= 0)
          {
            keyPressed = false ;
          }
-         else if(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize] == 1)
+         else if(world.position[ ((this.i - world.blockSize)/world.blockSize)  ][this.j/world.blockSize] == 1)
          {
            keyPressed = false ;
          }
        }
        if(side == "DOWN")
        {
-         if(row + world.blockSize >= height)
+         if(this.i + world.blockSize >= height)
          {
            keyPressed = false ;
          }
-         else if(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize] == 1)
+         else if(world.position[ ((this.i + world.blockSize)/world.blockSize)  ][this.j/world.blockSize] == 1)
          {
            keyPressed = false ;
          }
        }
        if(side == "LEFT")
        {
-         if(column <= 0)
+         if(this.j <= 0)
          {
            keyPressed = false ;
          }
-         else if(world.position[  (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize] == 1)
+         else if(world.position[  (this.i/world.blockSize)   ][( this.j - world.blockSize)/world.blockSize] == 1)
          {
            keyPressed = false ;
          }
        }
        if(side == "RIGHT")
        {
-         if(column + world.blockSize >= width)
+         if(this.j + world.blockSize >= width)
          {
            keyPressed = false ;
          }
-         else if(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize] == 1)
+         else if(world.position[ (this.i/world.blockSize)  ][( this.j + world.blockSize)/world.blockSize] == 1)
          {
            keyPressed = false ;
          }
@@ -358,56 +378,21 @@ class Robot
   
   void isOnTarget()
   {
-   if (keyPressed == true )
+   if(world.position[this.i/world.blockSize][this.j/world.blockSize] == 2)
    {
-     if(key == ip.up())
-     {
-       if(side == "UP")
-       {
-         if(world.position[ ((row - world.blockSize)/world.blockSize)  ][column/world.blockSize] == 2)
-         {
-           row -= 50; 
-           world.state = 0 ;
-           keyPressed = false ;
-         }
-       }
-       if(side == "DOWN")
-       {
-         if(world.position[ ((row + world.blockSize)/world.blockSize)  ][column/world.blockSize] == 2)
-         {
-           row += 50;
-           world.state = 0 ;
-           keyPressed = false ;
-         }
-       }
-       if(side == "LEFT")
-       {
-         if(world.position[ (row/world.blockSize)   ][( column - world.blockSize)/world.blockSize] == 2)
-         {
-           column -= 50;
-           world.state = 0 ;
-           keyPressed = false ;
-         }
-       }
-       if(side == "RIGHT")
-       {
-         if(world.position[ (row/world.blockSize)  ][( column + world.blockSize)/world.blockSize] == 2)
-         {
-           column += 50 ;
-           world.state = 0 ;
-           keyPressed = false ;
-         }
-       }
-     }// button condition
-   }// keyPressed condition
-  }// isOnTarget method
+    world.state = 0 ;
+   }
+  }
+     // button condition
+   // keyPressed condition
+  // isOnTarget method
   
-  int getRow(){
-    return row/blockSize;  
+  int get_Row(){
+    return i/blockSize;  
   }
   
-  int getColumn(){
-    return column/blockSize;  
+  int get_Column(){
+    return j/blockSize;  
   }
 }
 
