@@ -384,6 +384,9 @@ class Robot
    if(world.position[this.i/world.blockSize][this.j/world.blockSize] == 2)
    {
     world.state = 0 ;
+    background(#FFFFFF);  
+    textSize(40);
+    text("You Win", 160, 250);
    }
   }
      // button condition
