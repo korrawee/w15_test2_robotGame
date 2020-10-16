@@ -6,7 +6,7 @@ void setup()
   size(500, 500);
   strokeWeight(2);
   world.load();
-  world.robot.ip.load(); 
+  //world.robot.ip.load(); 
 }
 
 void draw()
@@ -44,8 +44,10 @@ class World
   String[][] targetPosition;
   String[][] robotPosition;
   int[][] position = new int[500/blockSize][500/blockSize];
-  Robot robot = new Robot(blockSize);
+ // Robot robot = new Robot(blockSize);
+  Snake snake = new Snake(position[0][0], position[0][0], blockSize);
   
+ 
   World()
   {
   }
@@ -61,7 +63,7 @@ class World
       }
      }
     }
-    position[robot.get_Row()][robot.get_Column()] = 3;
+    position[snake.snakeParts[0].get_Row()][snake.snakeParts[0].get_Column()] = 3;
     for(int i=0; i < height/blockSize; i++){
       tmpLines[i] = "";
       
@@ -103,9 +105,9 @@ class World
     position[0][0] = 3; //gen. robot
     position[tmpIndex][tmpIndex2] = 2; // gen. target
     
-    for(int i=0; i < position.length; i+=1){
+    for(int i=1; i < position.length; i+=1){
       
-      for(int j=0; j < position.length; j+=2)
+      for(int j=1; j < position.length; j+=2)
       {
         if(position[i][j] != 2 && position[i][j] != 3)
         {
@@ -135,16 +137,16 @@ class World
           this.draw_target(i, j); // convert index into row, column
           
         }if(position[i][j] == 3){//  if robot's position draw robot
-          robot.display(i,j);
+          snake.display();
         }
       }// j loop
     }// i loop
 
-    robot.isBlocked();
-    robot.move();
-    robot.isOnTarget();
-    robot.turnLeft();
-    robot.turnRight();
+    snake.snakeParts[0].isBlocked();
+    snake.snakeParts[0].move();
+    snake.snakeParts[0].isOnTarget();
+    snake.snakeParts[0].turnLeft();
+    snake.snakeParts[0].turnRight();
   }//draw_map method
   
   void draw_target(int tmpRow, int tmpCol)
@@ -195,6 +197,41 @@ class World
   }//draw_barrier method
   
 }
+
+class Snake{
+  Robot[] snakeParts = new Robot[20];  
+  int column;
+  int row;
+  int move_x = 0;
+  int move_y = 0;
+  Snake(int tmpX, int tmpY, int blockSize){
+    int column = tmpX/blockSize;
+    int row = tmpY/blockSize;
+    for(int i = 0; i < 4 ; i++){
+
+      snakeParts[i] = new Robot(blockSize);
+      snakeParts[i].display(tmpX, tmpY * blockSize);
+    }
+  }
+  void move(){
+    snakeParts[0].move();
+    for(int i = 1; i < snakeParts.length; i++){
+      snakeParts[i].set_row(snakeParts[i-1].get_Row());
+      snakeParts[i].set_column(snakeParts[i-1].get_Column());
+    }
+    this.display();
+  }
+  
+  void display(){
+    for(int i = 1; i < snakeParts.length; i++){
+      snakeParts[i].display(snakeParts[0].get_Column(), snakeParts[i].get_Row());
+    }
+    System.out.println("displayed");
+}
+ }
+
+
+
 
 class Robot
 {
@@ -399,6 +436,13 @@ class Robot
   
   int get_Column(){
     return j/blockSize;  
+  }
+  
+  void set_row(int tmpRow){
+    row = tmpRow * blockSize;
+  }
+  void set_column(int tmp_column){
+    column = tmp_column * blockSize;
   }
 }
 
