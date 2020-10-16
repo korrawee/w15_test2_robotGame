@@ -141,8 +141,8 @@ class World
     }// i loop
 
     robot.isBlocked();
-    robot.isOnTarget();
     robot.move();
+    robot.isOnTarget();
     robot.turnLeft();
     robot.turnRight();
   }//draw_map method
